@@ -1,3 +1,8 @@
 .idea
 venv
 models
+frontend.iml
+images/inputs
+images/outputs
+backend/backend.iml
+backend/venv
