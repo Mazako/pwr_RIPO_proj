@@ -50,7 +50,7 @@ function App() {
 
 
     return (
-        <div className='d-flex flex-column align-items-center'>
+        <div className='d-flex flex-column align-items-center gap-3'>
             <h1 className='display-1'>Analizuj se filmosa d-_-b</h1>
             <input type='file'
                    title='Wybierz plik'
