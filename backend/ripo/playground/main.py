@@ -1,6 +1,6 @@
 import cv2
 
-from video_analyzer import model_predictor
+from ripo.video_analyzer import model_predictor
 
 cv2.VideoCapture()
 

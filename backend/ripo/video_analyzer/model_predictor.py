@@ -5,6 +5,7 @@ import cvzone
 from ultralytics import YOLO
 
 from .detections import classes
+from ..app.model import MaskPosition
 
 
 def _analyze_frame(results, img):
@@ -25,7 +26,7 @@ def _analyze_frame(results, img):
                 cvzone.putTextRect(img, f'{class_name} {conf}', (max(0, x1), max(35, y1)), scale=1, thickness=1)
 
 
-def predict_video(path: str, result_path='./movie.mp4', on_progress=None):
+def predict_video(path: str, result_path='./movie.mp4', on_progress=None, mask: MaskPosition = None):
     model = YOLO('./models/yolov8l.pt', verbose=False)
     cap = cv2.VideoCapture(path)
     video_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -41,7 +42,14 @@ def predict_video(path: str, result_path='./movie.mp4', on_progress=None):
         if on_progress is not None:
             on_progress(i, length)
         _, img = cap.read()
-        results = model.predict(img, stream=True, verbose=False)
+
+        if mask is not None:
+            clipped = img.copy()
+            clipped[mask.y: mask.y + mask.height, mask.x: mask.x + mask.width, :] = [0, 0, 0]
+        else:
+            clipped = img
+
+        results = model.predict(clipped, stream=True, verbose=False)
         _analyze_frame(results, img)
         output.write(img)
     output.release()
