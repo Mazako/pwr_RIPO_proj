@@ -27,14 +27,14 @@ def _analyze_frame(results, img):
 
 
 def predict_video(path: str, result_path='./movie.mp4', on_progress=None, mask: MaskPosition = None):
-    model = YOLO('./models/yolov8l.pt', verbose=False)
+    model = YOLO('./models/yolov8n.pt', verbose=False)
     cap = cv2.VideoCapture(path)
     video_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     video_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     length = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     fps = int(cap.get(cv2.CAP_PROP_FPS))
     output = cv2.VideoWriter(result_path,
-                             cv2.VideoWriter_fourcc(*'avc1'),
+                             cv2.VideoWriter_fourcc(*'mp4v'),
                              fps, (video_w, video_h))
 
     for i in range(length):

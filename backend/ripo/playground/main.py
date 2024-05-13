@@ -4,9 +4,9 @@ from ripo.video_analyzer import model_predictor
 
 cv2.VideoCapture()
 
-result_path = '../../images/outputs/cars.mp4'
+result_path = '../../../images/outputs/cars.mp4'
 
-model_predictor.predict_video('../../images/cars.mp4', result_path)
+model_predictor.predict_video('../../../images/cars.mp4', result_path)
 
 cap = cv2.VideoCapture(result_path)
 

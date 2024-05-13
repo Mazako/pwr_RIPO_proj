@@ -2,7 +2,7 @@ import os
 import uuid
 from typing import Optional
 import json
-
+import os
 from fastapi import FastAPI, UploadFile, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import FileResponse, Response
@@ -40,7 +40,10 @@ def process_video(_id: str, src: str, dest: str, mask: Optional[MaskPosition] = 
 @app.get('/getVideo', response_class=FileResponse)
 async def get_image(video_id: str):
     path = tasks.get(video_id)['path']
-    return FileResponse(path, status_code=200, media_type='video/mp4')
+    _id = str(uuid.uuid4())
+    new_path = f'../../../images/outputs/{_id}.mp4'
+    os.system(f'ffmpeg -i {path} -vcodec libx264  {new_path}')
+    return FileResponse(new_path, status_code=200, media_type='video/mp4')
 
 
 @app.post('/analyze')
