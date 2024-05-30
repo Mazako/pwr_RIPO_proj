@@ -1,14 +1,9 @@
-import os
-import uuid
-from typing import Optional
-import json
-
-from fastapi import FastAPI, UploadFile, BackgroundTasks
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.responses import FileResponse, Response
 
-from model import MaskPosition
-from ripo.video_analyzer import model_predictor
+from ripo.app.analyze_router import analyze_router
+from ripo.app.config_router import config_router
+from ripo.app.config_service import load_config, write_config
 
 app = FastAPI()
 
@@ -25,56 +20,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-tasks = {}
+app.include_router(router=config_router)
+app.include_router(router=analyze_router)
 
 
-def process_video(_id: str, src: str, dest: str, mask: Optional[MaskPosition] = None):
-    def on_progress(current, total):
-        tasks[_id]['progress'] = (current / total) * 100
-
-    model_predictor.predict_video(src, dest, on_progress, mask)
-    tasks[_id]['done'] = True
-    os.remove(src)
+@app.on_event(event_type='startup')
+def on_start():
+    print('LOADING CONFIGURATION')
+    load_config()
 
 
-@app.get('/getVideo', response_class=FileResponse)
-async def get_image(video_id: str):
-    path = tasks.get(video_id)['path']
-    return FileResponse(path, status_code=200, media_type='video/mp4')
-
-
-@app.post('/analyze')
-async def analyze(video: UploadFile, background_tasks: BackgroundTasks, mask: Optional[str] = None):
-    _id = str(uuid.uuid4())
-    input_path = f'../../../images/inputs/{video.filename}'
-    output_path = f'../../../images/outputs/{_id}.mp4'
-
-    with open(input_path, 'wb') as file:
-        file.write(video.file.read())
-
-    tasks[_id] = {
-        'progress': 0,
-        'done': False,
-        'path': output_path
-    }
-    print(mask)
-    if mask is not None:
-        mask = json.loads(mask)
-        mask_model = MaskPosition(**mask)
-    else:
-        mask_model = None
-
-    background_tasks.add_task(process_video,
-                              str(_id),
-                              input_path,
-                              output_path,
-                              mask_model)
-    return {'id': _id}
-
-
-@app.get('/ready')
-def is_image_ready(video_id: str):
-    return {
-        'ready': tasks.get(video_id)['done'] is True,
-        'progress': tasks.get(video_id)['progress']
-    }
+@app.on_event(event_type='shutdown')
+def on_shut():
+    print('SAVING CONFIGURATION')
+    write_config()

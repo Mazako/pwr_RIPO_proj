@@ -1,8 +1,25 @@
-classes = {
-    0: {'class_name': 'person'},
-    1: {'class_name': 'bicycle'},
-    2: {'class_name': 'car'},
-    3: {'class_name': 'motorcycle'},
-    5: {'class_name': 'bus'},
-    7: {'class_name': 'truck'},
+from pydantic import BaseModel
+
+
+class DetectionClass(BaseModel):
+    name: str
+    used: bool
+
+
+class DetectionClassDto(DetectionClass):
+    type_of_model: str
+    id: int
+
+
+yolo_classes = {
+    0: DetectionClass(name='person', used=True),
+    1: DetectionClass(name='bicycle', used=True),
+    2: DetectionClass(name='car', used=True),
+    3: DetectionClass(name='motorcycle', used=True),
+    5: DetectionClass(name='bus', used=True),
+    7: DetectionClass(name='truck', used=True),
+}
+
+deer_dataset_classes = {
+    0: DetectionClass(name='deer', used=True)
 }

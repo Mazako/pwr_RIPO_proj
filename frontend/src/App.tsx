@@ -1,7 +1,8 @@
 import React, {ChangeEvent, useState} from 'react';
-import {ProgressBar} from "react-bootstrap";
+import {Button, ProgressBar} from "react-bootstrap";
 import {VideoUploader} from "./VideoUploader";
 import {Position} from "./MaskRectangle";
+import {ConfigModal} from "./ConfigModal";
 
 function App() {
     const [position, setPosition] = useState<Position>({
@@ -12,7 +13,7 @@ function App() {
     });
 
     const [showMask, setShowMask] = useState<boolean>(false);
-
+    const [showConfig, setShowConfig] = useState<boolean>(false);
     const [videoState, setVideoState] = useState<VideoState>('none');
     const [video, setVideo] = useState<File>();
     const [videoUrl, setVideoUrl] = useState<string>();
@@ -40,7 +41,7 @@ function App() {
         data.set('video', video);
         let url = 'http://localhost:8000/analyze';
         if (showMask) {
-            url = `http://localhost:8000/analyze?mask=${JSON.stringify(position)}`
+            url = `http://localhost:8000/analyze?mask=${JSON.stringify(position)}`;
         }
         const response = await fetch(url, {
             method: 'POST',
@@ -69,15 +70,20 @@ function App() {
                    onChange={handleVideoChange}
             />
             <div className="d-flex gap-5">
-                <button disabled={!video} onClick={handleVideoSend}>Analizuj</button>
-                <button disabled={!video} onClick={() => setShowMask(!showMask)}>
+                <Button disabled={!video} onClick={handleVideoSend}>Analizuj</Button>
+                <Button disabled={!video} onClick={() => setShowMask(!showMask)}>
                     {
                         showMask
                             ? 'Usuń maskę'
                             : 'Nałóż maskę'
                     }
-                </button>
+                </Button>
+                <Button onClick={() => setShowConfig(true)}>
+                    Konfiguracja
+                </Button>
             </div>
+            <ConfigModal show={showConfig}
+                         closeCallback={() => setShowConfig(false)}/>
             {
                 video && videoState === 'none'
                 &&

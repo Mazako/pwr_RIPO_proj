@@ -23,9 +23,9 @@ const convertDurationToString = (duration: number): string => {
     return `${minutes}:${seconds}`;
 };
 
-const clamp = (value: number, max: number):  number => {
+const clamp = (value: number, max: number): number => {
     return Math.min(max, Math.max(value, 0));
-}
+};
 
 interface VideoUploaderProps {
     file: File,
@@ -36,29 +36,31 @@ interface VideoUploaderProps {
 
 export const VideoUploader: FC<VideoUploaderProps> = ({file, maskPosition, setMaskPosition, showMask}) => {
 
-
-    const videoURL = URL.createObjectURL(file);
     const videoPlayerRef = useRef<HTMLVideoElement>(null);
+    const videoURL = URL.createObjectURL(file);
     const [videoLength, setVideoLength] = useState<number>(0);
     const [currentTimestamp, setCurrentTimestamp] = useState<number>(0);
     const [videoState, setVideoState] = useState<VideoState>('PAUSE');
 
-
-    const handleOnDrag = (dx: number, dy :number) => {
-        setMaskPosition(prev => {return{
-            ...prev,
-            x: clamp(prev.x + dx, (videoPlayerRef.current?.videoWidth || 0) - prev.width),
-            y: clamp(prev.y + dy, (videoPlayerRef.current?.videoHeight || 0) - prev.height)
-        }});
-    }
+    const handleOnDrag = (dx: number, dy: number) => {
+        setMaskPosition(prev => {
+            return {
+                ...prev,
+                x: clamp(prev.x + dx, (videoPlayerRef.current?.videoWidth || 0) - prev.width),
+                y: clamp(prev.y + dy, (videoPlayerRef.current?.videoHeight || 0) - prev.height)
+            };
+        });
+    };
 
     const handleResize = (dx: number, dy: number) => {
-        setMaskPosition(prev => {return{
-            ...prev,
-            width: clamp(prev.width + dx, (videoPlayerRef.current?.videoWidth || 0) - prev.x),
-            height: clamp(prev.height + dy, (videoPlayerRef.current?.videoHeight || 0) - prev.y),
-        }})
-    }
+        setMaskPosition(prev => {
+            return {
+                ...prev,
+                width: clamp(prev.width + dx, (videoPlayerRef.current?.videoWidth || 0) - prev.x),
+                height: clamp(prev.height + dy, (videoPlayerRef.current?.videoHeight || 0) - prev.y),
+            };
+        });
+    };
 
     useEffect(() => {
         if (videoState === 'PAUSE') {
@@ -92,9 +94,11 @@ export const VideoUploader: FC<VideoUploaderProps> = ({file, maskPosition, setMa
         <div>
             <div style={{position: "relative", zIndex: 3}} draggable={false}>
                 <video draggable={false}
-                    onLoadedMetadata={handleMetadataLoad}
-                    ref={videoPlayerRef}
-                    onTimeUpdate={handleVideoProgress}>
+                       onLoadedMetadata={handleMetadataLoad}
+                       ref={videoPlayerRef}
+                       onTimeUpdate={handleVideoProgress}
+                       muted
+                       key={videoURL}>
                     <source src={videoURL} type="video/mp4"/>
                 </video>
                 {
@@ -102,7 +106,7 @@ export const VideoUploader: FC<VideoUploaderProps> = ({file, maskPosition, setMa
                     &&
                     <MaskRectangle position={maskPosition} onPositionChange={handleOnDrag} onResize={handleResize}/>
                 }
-                </div>
+            </div>
             <div className="d-flex align-items-center gap-3">
                 <Button onClick={() => videoState === 'PAUSE' ? setVideoState('PLAYING') : setVideoState('PAUSE')}
                         style={{width: 50}}>

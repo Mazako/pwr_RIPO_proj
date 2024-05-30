@@ -1,8 +1,10 @@
 .idea
 venv
-models
+backend/model
 frontend.iml
-images/inputs
-images/outputs
+backend/images/inputs/*
+backend/images/outputs/*
 backend/backend.iml
 backend/venv
+training
+runs
