@@ -1,23 +1,20 @@
 import cv2
-from ultralytics import YOLO
+import matplotlib.pyplot as plt
+import numpy as np
 
-from ripo.video_analyzer import model_predictor
+# Ładowanie i przygotowanie obrazów
+warnImage = cv2.imread('../../warn.png')
+warnImage = cv2.cvtColor(warnImage, cv2.COLOR_BGR2RGB)
+warnImage = cv2.resize(warnImage, (100, 100))  # Rozmiar ikony
 
-cv2.VideoCapture()
+img = cv2.imread('../../images/outputs/img_1.png')
+img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-result_path = '../../images/outputs/cars.mp4'
+mask = np.all(warnImage > [0, 0, 0], axis=2)
+mask = np.repeat(mask[:, :, np.newaxis], 3, axis=2)
 
-model_predictor.predict_video('../../images/cars.mp4', result_path)
+img[:100, :100][mask] = warnImage[mask]
 
-cap = cv2.VideoCapture(result_path)
-
-fps = int(cap.get(cv2.CAP_PROP_FPS))
-model = YOLO('../../model/yolov8n.pt', verbose=False)
-print(model.names)
-# while True:
-#     success, img = cap.read()
-#     if success:
-#         cv2.imshow("image", img)
-#     else:
-#         break
-#     cv2.waitKey(int(1000 / fps))
+# Wyświetlenie wyniku
+plt.imshow(img)
+plt.show()  # Zastępuje waitforbuttonpress dla bardziej standardowego podejścia

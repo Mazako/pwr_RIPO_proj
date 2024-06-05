@@ -28,6 +28,7 @@ app.include_router(router=analyze_router)
 def on_start():
     print('LOADING CONFIGURATION')
     load_config()
+    print('CONFIGURATION LOADED SUCCESSFULLY')
 
 
 @app.on_event(event_type='shutdown')
