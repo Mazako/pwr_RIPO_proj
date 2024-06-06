@@ -9,8 +9,8 @@ from starlette.responses import FileResponse
 from ripo.app.model import MaskPosition
 from ripo.video_analyzer import model_predictor
 
-PATH_TO_INPUTS_CACHE = '../../images/inputs'
-PATH_TO_OUTPUTS_CACHE = '../../images/outputs'
+PATH_TO_INPUTS_CACHE = './images/inputs'
+PATH_TO_OUTPUTS_CACHE = './images/outputs'
 
 analyze_router = APIRouter()
 
@@ -46,7 +46,6 @@ async def analyze(video: UploadFile, background_tasks: BackgroundTasks, mask: Op
         'done': False,
         'path': output_path
     }
-    print(mask)
     if mask is not None:
         mask = json.loads(mask)
         mask_model = MaskPosition(**mask)

@@ -1,7 +1,6 @@
 ultralytics==8.2.2
 matplotlib
 numpy
-opencv-python~=4.9.0.80
 pillow
 scipy
 cvzone==1.5.6
@@ -9,4 +8,3 @@ fastapi[ALL]~=0.111.0
 python-multipart
 
 starlette~=0.37.2
-ffmpeg-python

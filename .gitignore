@@ -1,6 +1,5 @@
 .idea
 venv
-backend/model
 frontend.iml
 backend/images/inputs/*
 backend/images/outputs/*

@@ -8,7 +8,7 @@ from .detections import yolo_classes, DetectionClass, deer_dataset_classes
 from .models import yolo_8l, yolo_deer_1
 from ..app.model import MaskPosition
 
-warnImage = cv2.imread('../../warn.png')
+warnImage = cv2.imread('./warn.png')
 warnImage = cv2.resize(warnImage, (100, 100))
 warn_mask = np.all(warnImage > [0, 0, 0], axis=2)
 warn_mask = np.repeat(warn_mask[:, :, np.newaxis], 3, axis=2)
@@ -58,7 +58,6 @@ def predict_video(path: str, result_path: str, on_progress=None, mask: MaskPosit
                              fps, (video_w, video_h))
 
     for i in range(length):
-        print(f'processing frame {i}/{length}')
         if on_progress is not None:
             on_progress(i, length)
         _, img = cap.read()

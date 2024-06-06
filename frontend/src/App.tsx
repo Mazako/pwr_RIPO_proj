@@ -21,7 +21,6 @@ function App() {
     const [progress, setProgress] = useState<number>(0);
 
     const checkVideoAvailable = async (id: string) => {
-        console.log(`http://localhost:8000/ready?video_id=${id}`);
         const response = await fetch(`http://localhost:8000/ready?video_id=${id}`);
         const json = await response.json();
         setProgress(Number(json['progress']));
@@ -53,7 +52,6 @@ function App() {
         setVideoId(id);
         const inrervalId = setInterval(async () => {
             const available = await checkVideoAvailable(id);
-            console.log(available);
             if (available) {
                 setVideoUrl(`http://localhost:8000/getVideo?video_id=${id}`);
                 setVideoState('done');

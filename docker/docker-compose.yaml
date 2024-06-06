@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+  fastapi:
+    build: ../backend
+    ports:
+      - 8000:8000
+    networks:
+      - backend
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  front:
+    build: ../frontend
+    ports:
+      - 3000:3000
+    networks:
+      - backend
+
+networks:
+  backend:

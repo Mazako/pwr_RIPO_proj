@@ -30,13 +30,13 @@ def _serialize_detection_classes(yolo: dict[int, DetectionClass], deer: dict[int
 
 
 def load_config():
-    with open('../../init.json', 'r') as file:
+    with open('./init.json', 'r') as file:
         config_json = json.load(file)
         _load_detection_classes(config_json, yolo_classes, deer_dataset_classes)
 
 
 def write_config():
-    with open('../../init.json', 'w') as file:
+    with open('./init.json', 'w') as file:
         config = {
             'detections': _serialize_detection_classes(yolo_classes, deer_dataset_classes)
         }

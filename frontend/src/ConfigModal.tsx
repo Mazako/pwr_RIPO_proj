@@ -66,7 +66,6 @@ export const ConfigModal: FC<ConfigModalProps> = ({show, closeCallback}) => {
                 [name]: !current
             };
         });
-        console.log(selections);
         await fetch(`http://localhost:8000/config/classes/update?class_id=${id}&class_type=${type}&value=${!current}`,
             {method: 'PATCH'});
     };
