@@ -98,7 +98,7 @@ export const VideoUploader: FC<VideoUploaderProps> = ({file, maskPosition, setMa
                        ref={videoPlayerRef}
                        onTimeUpdate={handleVideoProgress}
                        muted
-                       key={videoURL}>
+                       key={file.name}>
                     <source src={videoURL} type="video/mp4"/>
                 </video>
                 {
